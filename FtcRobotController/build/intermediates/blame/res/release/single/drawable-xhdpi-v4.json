@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "/Users/Kashyap/Desktop/LineFollower/FtcRobotController/build/intermediates/res/merged/release/drawable-xhdpi-v4/icon_robotcontroller.png",
+        "source": "/Users/Kashyap/Desktop/LineFollower/FtcRobotController/src/main/res/drawable-xhdpi/icon_robotcontroller.png"
+    },
+    {
+        "merged": "/Users/Kashyap/Desktop/LineFollower/FtcRobotController/build/intermediates/res/merged/release/drawable-xhdpi-v4/icon_menu.png",
+        "source": "/Users/Kashyap/Desktop/LineFollower/FtcRobotController/src/main/res/drawable-xhdpi/icon_menu.png"
+    },
+    {
+        "merged": "/Users/Kashyap/Desktop/LineFollower/FtcRobotController/build/intermediates/res/merged/release/drawable-xhdpi-v4/ic_launcher.png",
+        "source": "/Users/Kashyap/Desktop/LineFollower/FtcRobotController/src/main/res/drawable-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/Kashyap/Downloads/Line Following/FtcRobotController/build/intermediates/res/merged/release/drawable-xhdpi-v4/icon_menu.png",
+        "source": "/Users/Kashyap/Downloads/Line Following/FtcRobotController/src/main/res/drawable-xhdpi/icon_menu.png"
+    },
+    {
+        "merged": "/Users/Kashyap/Downloads/Line Following/FtcRobotController/build/intermediates/res/merged/release/drawable-xhdpi-v4/icon_robotcontroller.png",
+        "source": "/Users/Kashyap/Downloads/Line Following/FtcRobotController/src/main/res/drawable-xhdpi/icon_robotcontroller.png"
+    },
+    {
+        "merged": "/Users/Kashyap/Downloads/Line Following/FtcRobotController/build/intermediates/res/merged/release/drawable-xhdpi-v4/ic_launcher.png",
+        "source": "/Users/Kashyap/Downloads/Line Following/FtcRobotController/src/main/res/drawable-xhdpi/ic_launcher.png"
+    }
+]
