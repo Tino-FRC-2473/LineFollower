@@ -1,4 +1,4 @@
-# Opmodes
+# Line Following
 
 ####NOTE: The 2015-2016 FTC season is now over. Until next season, any future commits will only before app version updates.
 
