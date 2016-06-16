@@ -34,4 +34,4 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <resources>
    <usb-device vendor-id="1027" product-id="24577" /> <!-- FT232 Modern Robotics -->
 </resources>
-<!-- From: file:/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/src/main/res/xml/device_filter.xml -->
+<!-- From: file:/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/src/main/res/xml/device_filter.xml -->

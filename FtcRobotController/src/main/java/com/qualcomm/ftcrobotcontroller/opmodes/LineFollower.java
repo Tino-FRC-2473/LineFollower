@@ -2,6 +2,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -15,22 +16,22 @@ public class LineFollower extends LinearOpMode {
     DcMotor C;
     DcMotor D;
     Servo L;
-    ColorSensor color;
+    AnalogInput line;
 
     @Override
     public void runOpMode() throws InterruptedException {
         hardwareMap.logDevices();
-        color = hardwareMap.colorSensor.get("CL");
+        line = hardwareMap.analogInput.get("LI");
         A = hardwareMap.dcMotor.get("A");
         B = hardwareMap.dcMotor.get("B");
         C = hardwareMap.dcMotor.get("C");
         D = hardwareMap.dcMotor.get("D");
         L = hardwareMap.servo.get("L");
 
-        color.enableLed(true);
-
         waitOneFullHardwareCycle();
 
         waitForStart();
+
+        telemetry.addData("Line Output", line.getValue());
     }
 }

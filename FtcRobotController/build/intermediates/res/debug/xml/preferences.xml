@@ -69,4 +69,4 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         android:targetClass="com.qualcomm.ftccommon.configuration.AutoConfigureActivity" />
     </PreferenceScreen>
   </PreferenceCategory>
-</PreferenceScreen><!-- From: file:/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/src/main/res/xml/preferences.xml -->
+</PreferenceScreen><!-- From: file:/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/src/main/res/xml/preferences.xml -->
