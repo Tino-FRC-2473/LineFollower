@@ -33,6 +33,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Register Op Modes
@@ -54,47 +55,12 @@ public class FtcOpModeRegister implements OpModeRegister {
      *
      * If two or more op modes are registered with the same name, the app will display an error.
      */
-
-    manager.register("NullOp", NullOp.class);
-
-    //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
-    manager.register("K9TeleOp", K9TeleOp.class);
-    manager.register("K9Line", K9Line.class);
-    manager.register ("PushBotAuto", PushBotAuto.class);
-    manager.register ("PushBotManual", PushBotManual.class);
-
-
-
-    /*
-     * Uncomment any of the following lines if you want to register an op mode.
-     */
-    manager.register("MR Gyro Test", MRGyroTest.class);
-
-    //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
-    //manager.register("ColorSensorDriver", ColorSensorDriver.class);
-
-    //manager.register("IrSeekerOp", IrSeekerOp.class);
-    //manager.register("CompassCalibration", CompassCalibration.class);
-    //manager.register("I2cAddressChangeExample", LinearI2cAddressChange.class);
-
-
-    //manager.register("NxtTeleOp", NxtTeleOp.class);
-
-    //manager.register("LinearK9TeleOp", LinearK9TeleOp.class);
-    //manager.register("LinearIrExample", LinearIrExample.class);
-
-
-    //manager.register ("PushBotManual1", PushBotManual1.class);
-    //manager.register ("PushBotAutoSensors", PushBotAutoSensors.class);
-    //manager.register ("PushBotIrEvent", PushBotIrEvent.class);
-
-    //manager.register ("PushBotManualSensors", PushBotManualSensors.class);
-    //manager.register ("PushBotOdsDetectEvent", PushBotOdsDetectEvent.class);
-    //manager.register ("PushBotOdsFollowEvent", PushBotOdsFollowEvent.class);
-    //manager.register ("PushBotTouchEvent", PushBotTouchEvent.class);
-
-    //manager.register("PushBotDriveTouch", PushBotDriveTouch.java);
-    //manager.register("PushBotIrSeek", PushBotIrSeek.java);
-    //manager.register("PushBotSquare", PushBotSquare.java);
+      manager.register("Driver Control", TeleOp6038.class);
+      manager.register("Autonomous Backup", AutonomousBackup.class);
+      manager.register("Autonomous Blue", AutonomousBlue_v3.class);
+      manager.register("Autonomous Red", AutonomousRed_v3.class);
+      manager.register("Autonomous 2", Autonomous2.class);
+      manager.register("Limit Switch Testing", LimitSwitchTest.class);
+      manager.register("Servo Testing", ServoLinear.class);
   }
 }

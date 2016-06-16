@@ -33,11 +33,4 @@ public class LineFollower extends LinearOpMode {
 
         waitForStart();
     }
-
-    public void getColors() {
-        while (opModeIsActive()) {
-            int rgb[] = {color.red(), color.green(), color.blue()};
-            telemetry.addData("RGB ARRAY", rgb);
-        }
-    }
 }
