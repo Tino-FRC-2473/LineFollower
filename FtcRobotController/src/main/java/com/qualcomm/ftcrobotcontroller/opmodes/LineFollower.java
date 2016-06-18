@@ -15,22 +15,26 @@ public class LineFollower extends OpMode {
 //    DcMotor B;
 //    DcMotor C;
 //    DcMotor D;
-//    Servo L;
-    AnalogInput line;
+    AnalogInput lineL;
+    AnalogInput lineC;
+    AnalogInput lineR;
 
     @Override
     public void init() {
         hardwareMap.logDevices();
-        line = hardwareMap.analogInput.get("LI");
+        lineL = hardwareMap.analogInput.get("A");
+        lineC = hardwareMap.analogInput.get("B");
+        lineR = hardwareMap.analogInput.get("C");
 //        A = hardwareMap.dcMotor.get("A");
 //        B = hardwareMap.dcMotor.get("B");
 //        C = hardwareMap.dcMotor.get("C");
 //        D = hardwareMap.dcMotor.get("D");
-//        L = hardwareMap.servo.get("L");
     }
 
     @Override
     public void loop() {
-        telemetry.addData("Line Output", line.getValue());
+        telemetry.addData("Sensor Output Left", lineL.getValue());
+        telemetry.addData("Sensor Output Center", lineC.getValue());
+        telemetry.addData("Sensor Output Right", lineR.getValue());
     }
 }
