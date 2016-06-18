@@ -2,46 +2,46 @@
 <items version="2" >
 
     <item
-        jar="/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/build/intermediates/exploded-aar/RobotCore-release/jars/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="0666d81ab6701ba68f81b170cbdb78ba434eb00b">
-        <dex dex="/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/build/intermediates/pre-dexed/debug/classes-40ff2286a93843350a60f7873c194eeaf8c7b96d.jar" />
-    </item>
-    <item
-        jar="/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/build/intermediates/exploded-aar/Analytics-release/jars/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="9dafed45e330aec14abcce05bdb7bbdb2a2d7092">
-        <dex dex="/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/build/intermediates/pre-dexed/debug/classes-34aef46f8b8fd6da6205f8cc8dc0f804586302a2.jar" />
-    </item>
-    <item
-        jar="/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/build/intermediates/exploded-aar/ModernRobotics-release/jars/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="01999c87afe3d10ffa06f3efa66f39e61e6aba0c">
-        <dex dex="/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/build/intermediates/pre-dexed/debug/classes-3b0cae043b37cfde7e5eda26a95e3d831f3961ec.jar" />
-    </item>
-    <item
-        jar="/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/build/intermediates/exploded-aar/WirelessP2p-release/jars/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="9403be210676ed196cdcc64c7391b9ae2361c174">
-        <dex dex="/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/build/intermediates/pre-dexed/debug/classes-402c4b353758f10dadf6345b011bfa63eb382a86.jar" />
-    </item>
-    <item
-        jar="/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/build/intermediates/exploded-aar/FtcCommon-release/jars/classes.jar"
+        jar="/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/build/intermediates/exploded-aar/FtcCommon-release/jars/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="e19ebc3f612058d1ce56c27e0867f609eb73edfa">
-        <dex dex="/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/build/intermediates/pre-dexed/debug/classes-9e37ea99db27b1b58c36b9daf4c0b8c80ef41f32.jar" />
+        <dex dex="/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/build/intermediates/pre-dexed/debug/classes-c82c2dfdf7c828d7ae5d75378959ee1753b36def.jar" />
     </item>
     <item
-        jar="/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/build/intermediates/exploded-aar/Hardware-release/jars/classes.jar"
+        jar="/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/build/intermediates/exploded-aar/Hardware-release/jars/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="5b3fe4efe8fad907294d5332bf26afe87764694f">
-        <dex dex="/Users/Kashyap/Downloads/Opmodes-master/FtcRobotController/build/intermediates/pre-dexed/debug/classes-a0d241b47c3cf282cad7b54a02099b5083280fc7.jar" />
+        <dex dex="/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/build/intermediates/pre-dexed/debug/classes-c61f6f1f0434ce40060cc5938667f4c2f5b24627.jar" />
+    </item>
+    <item
+        jar="/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/build/intermediates/exploded-aar/RobotCore-release/jars/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0666d81ab6701ba68f81b170cbdb78ba434eb00b">
+        <dex dex="/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/build/intermediates/pre-dexed/debug/classes-56db65395d0658fd679a5fe06565727709cc8009.jar" />
+    </item>
+    <item
+        jar="/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/build/intermediates/exploded-aar/Analytics-release/jars/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9dafed45e330aec14abcce05bdb7bbdb2a2d7092">
+        <dex dex="/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/build/intermediates/pre-dexed/debug/classes-0c6c64a06bcf8c87f6ca6ea8b661869686aec609.jar" />
+    </item>
+    <item
+        jar="/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/build/intermediates/exploded-aar/ModernRobotics-release/jars/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01999c87afe3d10ffa06f3efa66f39e61e6aba0c">
+        <dex dex="/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/build/intermediates/pre-dexed/debug/classes-664aedf24df23c95d0a4827de04707ce67050cbe.jar" />
+    </item>
+    <item
+        jar="/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/build/intermediates/exploded-aar/WirelessP2p-release/jars/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9403be210676ed196cdcc64c7391b9ae2361c174">
+        <dex dex="/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/build/intermediates/pre-dexed/debug/classes-4712e7752485563c0d526ff997182a67c0f53204.jar" />
     </item>
 
 </items>
