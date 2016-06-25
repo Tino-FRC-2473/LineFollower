@@ -54,14 +54,23 @@ public class Follow extends OpMode {
         switch(state()) {
             case 0: //c
                 forward();
+                assignEncoderValues(fl.getCurrentPosition(), fr.getCurrentPosition());
                 break;
             case 1: //r
+                halt();
+                reverseToPosition();
                 break;
             case 2: //l
+                halt();
+                reverseToPosition();
                 break;
             case 3: //c,r
+                halt();
+                turnRight(90);
                 break;
             case 4: //c,l
+                halt();
+                turnLeft(90);
                 break;
             default: //remaining: none, all
                 halt();
@@ -75,6 +84,25 @@ public class Follow extends OpMode {
 
     void halt() {
         setPowerAll(0.0);
+    }
+
+    void turnLeft(int deg) {
+        deg = 360 - deg;
+        while(spin.getHeading() != deg) {
+            fr.setPower(motor_power + 0.1);
+            fl.setPower(motor_power + 0.1);
+            br.setPower(-motor_power);
+            bl.setPower(-motor_power);
+        }
+    }
+
+    void turnRight(int deg) {
+        while(spin.getHeading() != deg) {
+            fr.setPower(-motor_power + 0.1);
+            fl.setPower(-motor_power + 0.1);
+            br.setPower(motor_power);
+            bl.setPower(motor_power);
+        }
     }
 
     void setPowerAll(double val) {
@@ -109,6 +137,12 @@ public class Follow extends OpMode {
 
     void refreshEncoderValues() {
         assignEncoderValues(0,0);
+    }
+
+    void reverseToPosition() {
+        while(fr.getCurrentPosition() != 0 && fl.getCurrentPosition() != 0) {
+            setPowerAll(-motor_power);
+        }
     }
 
     void assignEncoderValues(int val1, int val2) {
