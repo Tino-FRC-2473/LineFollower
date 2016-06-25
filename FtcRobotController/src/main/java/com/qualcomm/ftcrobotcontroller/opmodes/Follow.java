@@ -18,6 +18,7 @@ public class Follow extends OpMode {
     int analog_r, analog_c, analog_l; //line values for each line sensor...setting a threshold
     int[] encoders; //encoder values for positional safekeeping
     double m = 1.0; //distance between each line sensor(they are equidistant)
+    double motor_power;
 
     @Override
     public void init() {
@@ -35,6 +36,7 @@ public class Follow extends OpMode {
         analog_l = l.getValue();
 
         encoders = new int[2];
+        motor_power = 0.15;
     }
 
 /*
@@ -51,6 +53,7 @@ public class Follow extends OpMode {
     public void loop() {
         switch(state()) {
             case 0: //c
+                forward();
                 break;
             case 1: //r
                 break;
@@ -61,8 +64,24 @@ public class Follow extends OpMode {
             case 4: //c,l
                 break;
             default: //remaining: none, all
+                halt();
                 break;
         }
+    }
+
+    void forward() {
+        setPowerAll(motor_power);
+    }
+
+    void halt() {
+        setPowerAll(0.0);
+    }
+
+    void setPowerAll(double val) {
+        fr.setPower(val);
+        fl.setPower(val);
+        br.setPower(val + 0.1);
+        bl.setPower(val + 0.1);
     }
 
     public int state() {
