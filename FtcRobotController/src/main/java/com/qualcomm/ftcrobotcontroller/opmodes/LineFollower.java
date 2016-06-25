@@ -3,6 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 
 /**
  * Created by Kashyap on 6/11/16.
@@ -38,6 +39,12 @@ public class LineFollower extends OpMode {
 //        a.setDirection(DcMotor.Direction.REVERSE);
         c.setDirection(DcMotor.Direction.REVERSE);
 
+        //activate and reset encoders
+//        c.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+//        d.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+//        c.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+//        d.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
         //Set all line sensing values to false
         leftSense = false;
         rightSense = false;
@@ -57,21 +64,24 @@ public class LineFollower extends OpMode {
     @Override
     public void loop() {
         //If the center sensor detects something other than the line, the robot stops moving
-        checkLine();
-        if (!centerSense) {
-            stopRobot();
-        }
-        else {
-            runRobot(0.1);
-        }
+//        checkLine();
+//        if (!centerSense) {
+//            stopRobot();
+//        }
+//        else {
+//            runRobot(0.15);
+//        }
+        runRobot(0.15);
 
         //Display current sensor values on the Driver Station
-        telemetry.addData("Sensor Output Left", lineL.getValue());
-        telemetry.addData("Sensor Output Center", lineC.getValue());
-        telemetry.addData("Sensor Output Right", lineR.getValue());
-        telemetry.addData("Left Ouput Difference", lineL.getValue() - lineValueL);
-        telemetry.addData("Right Ouput Difference", lineR.getValue() - lineValueR);
-        telemetry.addData("Center Ouput Difference", lineC.getValue() - lineValueC);
+//        telemetry.addData("Encoder Left", c.getCurrentPosition());
+//        telemetry.addData("Encoder Right", d.getCurrentPosition());
+//        telemetry.addData("Sensor Output Left", lineL.getValue());
+//        telemetry.addData("Sensor Output Center", lineC.getValue());
+//        telemetry.addData("Sensor Output Right", lineR.getValue());
+//        telemetry.addData("Left Ouput Difference", lineL.getValue() - lineValueL);
+//        telemetry.addData("Right Ouput Difference", lineR.getValue() - lineValueR);
+//        telemetry.addData("Center Ouput Difference", lineC.getValue() - lineValueC);
     }
 
     //Checks if the current sensor values are within 100 of the calibrated values
