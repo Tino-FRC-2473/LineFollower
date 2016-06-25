@@ -94,6 +94,7 @@ public class Follow extends OpMode {
             br.setPower(-motor_power);
             bl.setPower(-motor_power);
         }
+        spin.calibrate();
     }
 
     void turnRight(int deg) {
@@ -103,6 +104,7 @@ public class Follow extends OpMode {
             br.setPower(motor_power);
             bl.setPower(motor_power);
         }
+        spin.calibrate();
     }
 
     void setPowerAll(double val) {
