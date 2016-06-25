@@ -55,18 +55,6 @@ public class LineFollower extends OpMode {
         if (!centerSense) {
             stopRobot();
         }
-        else if (leftSense && !centerSense) {
-
-        }
-        else if (rightSense && !centerSense) {
-
-        }
-        else if (leftSense && centerSense) {
-
-        }
-        else if (rightSense && centerSense) {
-
-        }
         else {
             runRobot(0.1);
         }
@@ -111,9 +99,9 @@ public class LineFollower extends OpMode {
 
     public void runRobot(double speed) {
         a.setPower(speed);
-        b.setPower(speed + 0.05);
+        b.setPower(speed + 0.1);
         c.setPower(speed);
-        d.setPower(speed + 0.05);
+        d.setPower(speed + 0.1);
     }
 }
 
