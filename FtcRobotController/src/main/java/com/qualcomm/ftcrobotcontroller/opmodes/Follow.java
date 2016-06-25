@@ -3,6 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 
 /**
@@ -30,6 +31,9 @@ public class Follow extends OpMode {
         c = hardwareMap.analogInput.get("C");
         r = hardwareMap.analogInput.get("R");
         spin = hardwareMap.gyroSensor.get("spin");
+
+        fr.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        fl.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
         analog_r = r.getValue();
         analog_c = c.getValue();
