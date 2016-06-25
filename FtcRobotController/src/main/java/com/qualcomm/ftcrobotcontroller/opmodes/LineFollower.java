@@ -12,11 +12,11 @@ public class LineFollower extends OpMode {
     private double lineValueR;
     private double lineValueC;
     private double currentTime;
-    private boolean leftSense = false;
-    private boolean rightSense = false;
-    private boolean centerSense = false;
-    DcMotor a;
-    DcMotor b;
+    private boolean leftSense;
+    private boolean rightSense;
+    private boolean centerSense;
+//    DcMotor a;
+//    DcMotor b;
     DcMotor c;
     DcMotor d;
     AnalogInput lineL;
@@ -29,13 +29,19 @@ public class LineFollower extends OpMode {
         lineL = hardwareMap.analogInput.get("L");
         lineC = hardwareMap.analogInput.get("CE");
         lineR = hardwareMap.analogInput.get("R");
-        a = hardwareMap.dcMotor.get("A");
-        b = hardwareMap.dcMotor.get("B");
+//        a = hardwareMap.dcMotor.get("A");
+//        b = hardwareMap.dcMotor.get("B");
         c = hardwareMap.dcMotor.get("C");
         d = hardwareMap.dcMotor.get("D");
 
-        a.setDirection(DcMotor.Direction.REVERSE);
+        //Reverse the directions of the left motors
+//        a.setDirection(DcMotor.Direction.REVERSE);
         c.setDirection(DcMotor.Direction.REVERSE);
+
+        //Set all line sensing values to false
+        leftSense = false;
+        rightSense = false;
+        centerSense = false;
 
         //Calibrate sensors for the line
         lineValueL = lineL.getValue();
@@ -50,8 +56,8 @@ public class LineFollower extends OpMode {
 
     @Override
     public void loop() {
-        checkForLine();
         //If the center sensor detects something other than the line, the robot stops moving
+        checkLine();
         if (!centerSense) {
             stopRobot();
         }
@@ -63,10 +69,13 @@ public class LineFollower extends OpMode {
         telemetry.addData("Sensor Output Left", lineL.getValue());
         telemetry.addData("Sensor Output Center", lineC.getValue());
         telemetry.addData("Sensor Output Right", lineR.getValue());
+        telemetry.addData("Left Ouput Difference", lineL.getValue() - lineValueL);
+        telemetry.addData("Right Ouput Difference", lineR.getValue() - lineValueR);
+        telemetry.addData("Center Ouput Difference", lineC.getValue() - lineValueC);
     }
 
-    //Checks the current sensor values against the values obtained during calibration
-    public void checkForLine() {
+    //Checks if the current sensor values are within 100 of the calibrated values
+    public void checkLine() {
         //Left sensor
         if (lineL.getValue() < 100 + lineValueL && lineL.getValue() > lineValueL - 100) {
             leftSense = true;
@@ -91,17 +100,17 @@ public class LineFollower extends OpMode {
     }
 
     public void stopRobot() {
-        a.setPower(0);
-        b.setPower(0);
+//        a.setPower(0);
+//        b.setPower(0);
         c.setPower(0);
         d.setPower(0);
     }
 
     public void runRobot(double speed) {
-        a.setPower(speed);
-        b.setPower(speed + 0.1);
+//        a.setPower(speed);
+//        b.setPower(speed);
         c.setPower(speed);
-        d.setPower(speed + 0.1);
+        d.setPower(speed);
     }
 }
 
