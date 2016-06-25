@@ -16,7 +16,7 @@ public class Follow extends OpMode {
 
     /*Data creation: other data*/
     int analog_r, analog_c, analog_l; //line values for each line sensor...setting a threshold
-    double[] encoders; //encoder values for positional safekeeping
+    int[] encoders; //encoder values for positional safekeeping
     double m = 1.0; //distance between each line sensor(they are equidistant)
 
     @Override
@@ -34,13 +34,66 @@ public class Follow extends OpMode {
         analog_c = c.getValue();
         analog_l = l.getValue();
 
-        encoders = new double[2];
-        encoders[0] = 0.0;
-        encoders[1] = 0.0;
+        encoders = new int[2];
     }
+
+/*
+* State Legend:
+* c: 0
+* r: 1
+* l: 2
+* c/r: 3
+* c/l: 4
+* else: 100
+* */
 
     @Override
     public void loop() {
+        switch(state()) {
+            case 0: //c
+                break;
+            case 1: //r
+                break;
+            case 2: //l
+                break;
+            case 3: //c,r
+                break;
+            case 4: //c,l
+                break;
+            default: //remaining: none, all
+                break;
+        }
+    }
 
+    public int state() {
+        if(analogEqualsLine(c, analog_c)) {
+            if(analogEqualsLine(r, analog_r)) {
+                return 3;
+            } else if(analogEqualsLine(l, analog_l)) {
+                return 4;
+            }
+            return 0;
+        } else {
+            if(analogEqualsLine(r, analog_r)) {
+                return 1;
+            } else if(analogEqualsLine(l, analog_l)) {
+                return 2;
+            } else {
+                return 100;
+            }
+        }
+    }
+
+    boolean analogEqualsLine(AnalogInput i, int val) {
+        return Math.abs(i.getValue() - val) <= 100;
+    }
+
+    void refreshEncoderValues() {
+        assignEncoderValues(0,0);
+    }
+
+    void assignEncoderValues(int val1, int val2) {
+        encoders[0] = val1;
+        encoders[1] = val2;
     }
 }
