@@ -65,8 +65,13 @@
   </string-array>
     <!-- From: file:/Users/sethideep23/Desktop/Robotics/LineFollower/FtcRobotController/src/main/res/values/colors.xml -->
     <eat-comment/>
+<<<<<<< Updated upstream
     <color name="black">#000000</color>
     <!-- From: file:/Users/sethideep23/Desktop/Robotics/LineFollower/FtcRobotController/build/intermediates/exploded-aar/FtcCommon-release/res/values/values.xml -->
+=======
+    <color name="black">#2F32FF</color>
+    <!-- From: file:/Users/Kashyap/Documents/Projects/Robotics/FRC/LineFollower/FtcRobotController/build/intermediates/exploded-aar/FtcCommon-release/res/values/values.xml -->
+>>>>>>> Stashed changes
     <eat-comment/>
     <color name="bright_qcom_blue">#309EA4</color>
     <!-- From: file:/Users/sethideep23/Desktop/Robotics/LineFollower/FtcRobotController/src/main/res/values/colors.xml -->
