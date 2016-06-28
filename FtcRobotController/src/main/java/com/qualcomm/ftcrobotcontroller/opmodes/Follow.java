@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  */
 public class Follow extends OpMode {
     /*Data creation: devices*/
-    DcMotor fr, fl, br, bl;
+    DcMotor br, bl;
     AnalogInput l, c, r;
     GyroSensor spin;
 
@@ -23,17 +23,18 @@ public class Follow extends OpMode {
 
     @Override
     public void init() {
-        fr = hardwareMap.dcMotor.get("FR");
-        fl = hardwareMap.dcMotor.get("FL");
         br = hardwareMap.dcMotor.get("BR");
         bl = hardwareMap.dcMotor.get("BL");
+
+        bl.setDirection(DcMotor.Direction.REVERSE);
+
         l = hardwareMap.analogInput.get("L");
         c = hardwareMap.analogInput.get("C");
         r = hardwareMap.analogInput.get("R");
         spin = hardwareMap.gyroSensor.get("spin");
 
-        fr.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        fl.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        br.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        bl.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         analog_r = r.getValue();
         analog_c = c.getValue();
@@ -55,32 +56,39 @@ public class Follow extends OpMode {
 
     @Override
     public void loop() {
-        switch(state()) {
-            case 0: //c
-                forward();
-                assignEncoderValues(fl.getCurrentPosition(), fr.getCurrentPosition());
-                break;
-            case 1: //r
-                halt();
-                reverseToPosition();
-                break;
-            case 2: //l
-                halt();
-                reverseToPosition();
-                break;
-            case 3: //c,r
-                halt();
-                turnRight(90);
-                break;
-            case 4: //c,l
-                halt();
-                turnLeft(90);
-                break;
-            default: //remaining: none, all
-                halt();
-                break;
-        }
+
+        br.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        bl.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+//        switch(state()) {
+//            case 0: //c
+//                forward();
+//                assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
+//                break;
+//            case 1: //r
+//                halt();
+//                reverseToPosition();
+//                break;
+//            case 2: //l
+//                halt();
+//                reverseToPosition();
+//                break;
+//            case 3: //c,r
+//                halt();
+//                turnRight(90);
+//                break;
+//            case 4: //c,l
+//                halt();
+//                turnLeft(90);
+//                break;
+//            default: //remaining: none, all
+//                halt();
+//                break;
+//        }
+        telemetry.addData("State: ", state());
     }
+
+
 
     void forward() {
         setPowerAll(motor_power);
@@ -93,8 +101,6 @@ public class Follow extends OpMode {
     void turnLeft(int deg) {
         deg = 360 - deg;
         while(spin.getHeading() != deg) {
-            fr.setPower(motor_power + 0.1);
-            fl.setPower(motor_power + 0.1);
             br.setPower(-motor_power);
             bl.setPower(-motor_power);
         }
@@ -103,8 +109,6 @@ public class Follow extends OpMode {
 
     void turnRight(int deg) {
         while(spin.getHeading() != deg) {
-            fr.setPower(-motor_power + 0.1);
-            fl.setPower(-motor_power + 0.1);
             br.setPower(motor_power);
             bl.setPower(motor_power);
         }
@@ -112,8 +116,6 @@ public class Follow extends OpMode {
     }
 
     void setPowerAll(double val) {
-        fr.setPower(val);
-        fl.setPower(val);
         br.setPower(val + 0.1);
         bl.setPower(val + 0.1);
     }
@@ -146,7 +148,7 @@ public class Follow extends OpMode {
     }
 
     void reverseToPosition() {
-        while(fr.getCurrentPosition() != 0 && fl.getCurrentPosition() != 0) {
+        while(br.getCurrentPosition() != 0 && bl.getCurrentPosition() != 0) {
             setPowerAll(-motor_power);
         }
     }
