@@ -17,9 +17,11 @@ public class Follow extends OpMode {
 
     /*Data creation: other data*/
     int analog_r, analog_c, analog_l; //line values for each line sensor...setting a threshold
-    int[] encoders; //encoder values for positional safekeeping
+    int[] encoders; //encoder values for positional safekeeping when only center is on the line
+    int[] encoders_two; //encoder values for positional safekeeping when the center AND another sensor are on the line
     double m = 1.0; //distance between each line sensor(they are equidistant)
     double motor_power;
+    boolean doubleHit = false; //triggered true if cases 3 or 4 have been activated
 
     @Override
     public void init() {
@@ -51,7 +53,7 @@ public class Follow extends OpMode {
 * l: 2
 * c/r: 3
 * c/l: 4
-* else: 100
+* else: -1
 * */
 
     @Override
@@ -60,31 +62,55 @@ public class Follow extends OpMode {
         br.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         bl.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-//        switch(state()) {
-//            case 0: //c
-//                forward();
-//                assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
-//                break;
-//            case 1: //r
-//                halt();
-//                reverseToPosition();
-//                break;
-//            case 2: //l
-//                halt();
-//                reverseToPosition();
-//                break;
-//            case 3: //c,r
-//                halt();
-//                turnRight(90);
-//                break;
-//            case 4: //c,l
-//                halt();
-//                turnLeft(90);
-//                break;
-//            default: //remaining: none, all
-//                halt();
-//                break;
-//        }
+        switch(state()) {
+            case 0:
+                forward();
+                assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
+                break;
+            case 1:
+                int b_l = bl.getCurrentPosition(); //initial position
+                int b_r = br.getCurrentPosition(); //initial position
+                while(state() != 0 || state() != -1) {
+                    forward();
+                    assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
+                }
+
+                double d_clicks = ((encoders_two[0] - b_l) + (encoders_two[1] - b_r))/2;
+
+                if(state() == 0) {
+
+                } else if(state() == -1) {
+
+                }
+
+                break;
+            case 2:
+                break;
+            case 3:
+                forward();
+                assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
+                if(state() == -1) {
+                    halt();
+                    reverseToPositionDouble();
+                    turnRight(90);
+                    refreshEncoderValuesDouble();
+                }
+                break;
+            case 4:
+                forward();
+                assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
+                if(state() == -1) {
+                    halt();
+                    reverseToPositionDouble();
+                    turnLeft(90);
+                    refreshEncoderValuesDouble();
+                }
+                break;
+            case -1:
+                halt();
+                break;
+        }
+
         telemetry.addData("State: ", state());
     }
 
@@ -134,7 +160,7 @@ public class Follow extends OpMode {
             } else if(analogEqualsLine(l, analog_l)) {
                 return 2;
             } else {
-                return 100;
+                return -1;
             }
         }
     }
@@ -145,6 +171,8 @@ public class Follow extends OpMode {
 
     void refreshEncoderValues() {
         assignEncoderValues(0,0);
+        br.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        bl.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     }
 
     void reverseToPosition() {
@@ -153,8 +181,29 @@ public class Follow extends OpMode {
         }
     }
 
+    void reverseToPositionDouble() {
+        while(br.getCurrentPosition() != encoders_two[1] && bl.getCurrentPosition() != encoders_two[1]) {
+            setPowerAll(-motor_power);
+        }
+    }
+
     void assignEncoderValues(int val1, int val2) {
         encoders[0] = val1;
         encoders[1] = val2;
+    }
+
+    void assignEncoderValuesDouble(int val1, int val2) {
+        encoders_two[0] = val1;
+        encoders_two[1] = val2;
+    }
+
+    void refreshEncoderValuesDouble() {
+        assignEncoderValuesDouble(0,0);
+        refreshEncoderValues(); //uncertain
+    }
+
+    double distance(double d_clicks) {
+        //Kashyap's code here...
+        return d_clicks;
     }
 }
