@@ -25,13 +25,13 @@ public class Follow extends OpMode {
 
     @Override
     public void init() {
-        br = hardwareMap.dcMotor.get("BR");
-        bl = hardwareMap.dcMotor.get("BL");
+        br = hardwareMap.dcMotor.get("C");
+        bl = hardwareMap.dcMotor.get("D");
 
         bl.setDirection(DcMotor.Direction.REVERSE);
 
         l = hardwareMap.analogInput.get("L");
-        c = hardwareMap.analogInput.get("C");
+        c = hardwareMap.analogInput.get("CE");
         r = hardwareMap.analogInput.get("R");
         spin = hardwareMap.gyroSensor.get("spin");
 

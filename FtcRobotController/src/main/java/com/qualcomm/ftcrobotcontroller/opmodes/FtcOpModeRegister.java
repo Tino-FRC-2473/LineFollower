@@ -57,5 +57,6 @@ public class FtcOpModeRegister implements OpModeRegister {
      */
 
       manager.register("Line Follower", LineFollower.class);
+      manager.register("Follow", Follow.class);
   }
 }
