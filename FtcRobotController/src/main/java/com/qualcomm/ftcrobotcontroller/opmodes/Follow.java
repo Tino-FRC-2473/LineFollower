@@ -54,6 +54,15 @@ public class Follow extends OpMode {
         telemetry.addData("Left Calibration: ", analog_l);
         telemetry.addData("Right Calibration: ", analog_r);
         telemetry.addData("Center Calibraion: ", analog_c);
+
+        spin.calibrate();
+        while (spin.isCalibrating()) {
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 /*
@@ -68,67 +77,39 @@ public class Follow extends OpMode {
 
     @Override
     public void loop() {
-
         br.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         bl.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-        switch(state()) {
-            case 0:
-                forward();
-                assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
-                break;
-//            case 1:
-//                int b_l = bl.getCurrentPosition(); //initial position
-//                int b_r = br.getCurrentPosition(); //initial position
-//                while (state() != 0 || state() != -1) {
-//                    forward();
-//                    assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
-//                }
-//
-//                double d_clicks = ((encoders_two[0] - b_l) + (encoders_two[1] - b_r)) / 2;
-//
-//                if (state() == 0) {
-//
-//                } else if (state() == -1) {
-//
-//                }
-//
-//                break;
-//            case 2:
-//                break;
-            case 3:
-                halt();
-                turnRight(90);
+//        switch(state()) {
+//            case 0:
 //                forward();
-//                assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
-//                if(state() == -1) {
-//                    halt();
-//                    reverseToPositionDouble();
-//                    turnRight(90);
-//                    refreshEncoderValuesDouble();
-//                }
-                break;
-//            case 4:
-//                forward();
-//                assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
-//                if(state() == -1) {
-//                    halt();
-//                    reverseToPositionDouble();
-//                    turnLeft(90);
-//                    refreshEncoderValuesDouble();
-//                }
+//                assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
 //                break;
-            case -1:
-                halt();
-                break;
+//            case 3:
+//                halt();
+//                turnRight(90);
+//                break;
+//            case -1:
+//                halt();
+//                break;
+//        }
+
+
+        if(state() == 0) {
+            forward();
+            assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
+        } else if(state() == 3) {
+            turnRight(90);
         }
 
         telemetry.addData("State: ", state());
-        telemetry.addData("Center Connection info", c.getConnectionInfo());
         telemetry.addData("Gyro Heading", spin.getHeading());
     }
 
+    @Override
+    public void stop() {
 
+    }
 
     void forward() {
         setPowerAll(motor_power);
@@ -139,15 +120,16 @@ public class Follow extends OpMode {
     }
 
     void turnLeft(int deg) {
+        spin.resetZAxisIntegrator();
         deg = 360 - deg;
         while(spin.getHeading() != deg) {
             br.setPower(-motor_power);
             bl.setPower(-motor_power);
         }
-        spin.calibrate();
     }
 
     void turnRight(int deg) {
+        spin.resetZAxisIntegrator();
         while(spin.getHeading() != deg) {
             br.setPower(motor_power);
             bl.setPower(motor_power);
@@ -161,16 +143,16 @@ public class Follow extends OpMode {
 
     public int state() {
         if(analogEqualsLine(c, analog_c)) {
-            if(analogEqualsLine(r, analog_r)) {
+            if(analogEqualsLine(r, analog_r) && !analogEqualsLine(l, analog_l)) {
                 return 3;
-            } else if(analogEqualsLine(l, analog_l)) {
+            } else if(analogEqualsLine(l, analog_l) && !analogEqualsLine(r, analog_r)) {
                 return 4;
             }
             return 0;
         } else {
-            if(analogEqualsLine(r, analog_r)) {
+            if(analogEqualsLine(r, analog_r) && !analogEqualsLine(l, analog_l)) {
                 return 1;
-            } else if(analogEqualsLine(l, analog_l)) {
+            } else if(analogEqualsLine(l, analog_l) && !analogEqualsLine(r, analog_r)) {
                 return 2;
             } else {
                 return -1;
