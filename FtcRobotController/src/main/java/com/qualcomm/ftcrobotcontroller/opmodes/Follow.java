@@ -17,7 +17,7 @@ public class Follow extends OpMode {
 
     final static int ENC_COUNTS = 1120;
     final static double G_RATIO = 1;
-    final static double CIRCUMFERENCE = Math.PI * diameter;
+    final static double CIRCUMFERENCE = Math.PI * 3.75;
 
 
 
