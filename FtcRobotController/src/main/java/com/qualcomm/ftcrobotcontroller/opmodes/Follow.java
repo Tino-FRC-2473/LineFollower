@@ -15,6 +15,12 @@ public class Follow extends OpMode {
     AnalogInput l, c, r;
     GyroSensor spin;
 
+    final static int ENC_COUNTS = 1120;
+    final static double G_RATIO = 1;
+    final static double CIRCUMFERENCE = Math.PI * diameter;
+
+
+
     /*Data creation: other data*/
     int analog_r, analog_c, analog_l; //line values for each line sensor...setting a threshold
     int[] encoders; //encoder values for positional safekeeping when only center is on the line
@@ -203,7 +209,8 @@ public class Follow extends OpMode {
     }
 
     double distance(double d_clicks) {
-        //Kashyap's code here...
+        //distance is in inches
+        d_clicks = (d_clicks * CIRCUMFERENCE)/(ENC_COUNTS * G_RATIO);
         return d_clicks;
     }
 }
