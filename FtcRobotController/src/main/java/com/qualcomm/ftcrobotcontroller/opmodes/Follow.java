@@ -34,7 +34,7 @@ public class Follow extends OpMode {
         br = hardwareMap.dcMotor.get("C");
         bl = hardwareMap.dcMotor.get("D");
 
-        bl.setDirection(DcMotor.Direction.REVERSE);
+        br.setDirection(DcMotor.Direction.REVERSE);
 
         l = hardwareMap.analogInput.get("L");
         c = hardwareMap.analogInput.get("CE");
@@ -49,7 +49,11 @@ public class Follow extends OpMode {
         analog_l = l.getValue();
 
         encoders = new int[2];
-        motor_power = 0.15;
+        motor_power = 0.1;
+
+        telemetry.addData("Left Calibration: ", analog_l);
+        telemetry.addData("Right Calibration: ", analog_r);
+        telemetry.addData("Center Calibraion: ", analog_c);
     }
 
 /*
@@ -73,51 +77,55 @@ public class Follow extends OpMode {
                 forward();
                 assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
                 break;
-            case 1:
-                int b_l = bl.getCurrentPosition(); //initial position
-                int b_r = br.getCurrentPosition(); //initial position
-                while(state() != 0 || state() != -1) {
-                    forward();
-                    assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
-                }
-
-                double d_clicks = ((encoders_two[0] - b_l) + (encoders_two[1] - b_r))/2;
-
-                if(state() == 0) {
-
-                } else if(state() == -1) {
-
-                }
-
-                break;
-            case 2:
-                break;
+//            case 1:
+//                int b_l = bl.getCurrentPosition(); //initial position
+//                int b_r = br.getCurrentPosition(); //initial position
+//                while (state() != 0 || state() != -1) {
+//                    forward();
+//                    assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
+//                }
+//
+//                double d_clicks = ((encoders_two[0] - b_l) + (encoders_two[1] - b_r)) / 2;
+//
+//                if (state() == 0) {
+//
+//                } else if (state() == -1) {
+//
+//                }
+//
+//                break;
+//            case 2:
+//                break;
             case 3:
-                forward();
-                assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
-                if(state() == -1) {
-                    halt();
-                    reverseToPositionDouble();
-                    turnRight(90);
-                    refreshEncoderValuesDouble();
-                }
+                halt();
+                turnRight(90);
+//                forward();
+//                assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
+//                if(state() == -1) {
+//                    halt();
+//                    reverseToPositionDouble();
+//                    turnRight(90);
+//                    refreshEncoderValuesDouble();
+//                }
                 break;
-            case 4:
-                forward();
-                assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
-                if(state() == -1) {
-                    halt();
-                    reverseToPositionDouble();
-                    turnLeft(90);
-                    refreshEncoderValuesDouble();
-                }
-                break;
+//            case 4:
+//                forward();
+//                assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
+//                if(state() == -1) {
+//                    halt();
+//                    reverseToPositionDouble();
+//                    turnLeft(90);
+//                    refreshEncoderValuesDouble();
+//                }
+//                break;
             case -1:
                 halt();
                 break;
         }
 
         telemetry.addData("State: ", state());
+        telemetry.addData("Center Connection info", c.getConnectionInfo());
+        telemetry.addData("Gyro Heading", spin.getHeading());
     }
 
 
@@ -127,7 +135,7 @@ public class Follow extends OpMode {
     }
 
     void halt() {
-        setPowerAll(0.0);
+        setPowerAll(0);
     }
 
     void turnLeft(int deg) {
@@ -144,12 +152,11 @@ public class Follow extends OpMode {
             br.setPower(motor_power);
             bl.setPower(motor_power);
         }
-        spin.calibrate();
     }
 
     void setPowerAll(double val) {
-        br.setPower(val + 0.1);
-        bl.setPower(val + 0.1);
+        br.setPower(val);
+        bl.setPower(val);
     }
 
     public int state() {
