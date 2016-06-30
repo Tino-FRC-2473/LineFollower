@@ -95,12 +95,12 @@ public class Follow extends OpMode {
 //        }
 
 
-        if(state() == 0) {
-            forward();
-            assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
-        } else if(state() == 3) {
-            turnRight(90);
-        }
+//        if(state() == 0) {
+//            forward();
+//            assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
+//        } else if(state() == 3) {
+//            turnRight(90);
+//        }
 
         telemetry.addData("State: ", state());
         telemetry.addData("Gyro Heading", spin.getHeading());
