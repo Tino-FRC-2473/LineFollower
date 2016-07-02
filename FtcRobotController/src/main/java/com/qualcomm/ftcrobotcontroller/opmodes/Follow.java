@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  */
 public class Follow extends OpMode {
     /*Data creation: devices*/
-    DcMotor br, bl;
+    DcMotor br, bl, fr, fl;
     AnalogInput l, c, r;
     GyroSensor spin;
 
@@ -25,36 +25,47 @@ public class Follow extends OpMode {
     int analog_r, analog_c, analog_l; //line values for each line sensor...setting a threshold
     int[] encoders; //encoder values for positional safekeeping when only center is on the line
     int[] encoders_two; //encoder values for positional safekeeping when the center AND another sensor are on the line
-    double m = 1.0; //distance between each line sensor(they are equidistant)
-    double motor_power;
-    boolean doubleHit = false; //triggered true if cases 3 or 4 have been activated
+    double m = 0.3; //distance between each line sensor(they are equidistant) --> THIS VALUE IS MEASURED IN INCHES, STILL NEEDS TO BE MEASURED
+    double motor_power, turn_power; //powers for turns and going straight
+    double angle; //locally stored angle value
 
     @Override
     public void init() {
+
+        //map hardware
+        fr = hardwareMap.dcMotor.get("A");
+        fl = hardwareMap.dcMotor.get("B");
         br = hardwareMap.dcMotor.get("C");
         bl = hardwareMap.dcMotor.get("D");
-
-        br.setDirection(DcMotor.Direction.REVERSE);
-
         l = hardwareMap.analogInput.get("L");
         c = hardwareMap.analogInput.get("CE");
         r = hardwareMap.analogInput.get("R");
         spin = hardwareMap.gyroSensor.get("spin");
 
+        //configure motors for everything to go in the same direction
+        br.setDirection(DcMotor.Direction.REVERSE);
+        fr.setDirection(DcMotor.Direction.REVERSE);
+
+        //reset encoders
         br.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         bl.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
+        //locally store value of tape
         analog_r = r.getValue();
         analog_c = c.getValue();
         analog_l = l.getValue();
 
+        //set values, etc.
         encoders = new int[2];
-        motor_power = 0.1;
+        motor_power = 0.15;
+        turn_power = 0.5;
 
+        //print data
         telemetry.addData("Left Calibration: ", analog_l);
         telemetry.addData("Right Calibration: ", analog_r);
         telemetry.addData("Center Calibraion: ", analog_c);
 
+        //callibrate gyro sensor
         spin.calibrate();
         while (spin.isCalibrating()) {
             try {
@@ -63,6 +74,9 @@ public class Follow extends OpMode {
                 e.printStackTrace();
             }
         }
+
+        //locally store gyro value for later use
+        angle = spin.getHeading();
     }
 
 /*
@@ -80,30 +94,33 @@ public class Follow extends OpMode {
         br.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         bl.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-//        switch(state()) {
-//            case 0:
-//                forward();
-//                assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
-//                break;
-//            case 3:
-//                halt();
-//                turnRight(90);
-//                break;
-//            case -1:
-//                halt();
-//                break;
-//        }
+        boolean center = analogEqualsLine(c, analog_c);
+        boolean right = analogEqualsLine(r, analog_r);
+        boolean left = analogEqualsLine(l, analog_l);
 
+        if(center && !right && !left) { //if only center
+            forward(); //run straight
+        } else if(center && right && !left) { //if center and right
+            turnRight(90);
+        } else if(center && !right && left) {
+            turnLeft(90);
+        } else if(!center && right && !left) {
 
-//        if(state() == 0) {
-//            forward();
-//            assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
-//        } else if(state() == 3) {
-//            turnRight(90);
-//        }
+        } else if(!center && !right && left) {
+
+        } else {
+            halt();
+        }
 
         telemetry.addData("State: ", state());
         telemetry.addData("Gyro Heading", spin.getHeading());
+        telemetry.addData("Local Angle Value", angle);
+        telemetry.addData("Left Value: ", l.getValue());
+        telemetry.addData("Right Value: ", r.getValue());
+        telemetry.addData("Center Value: ", c.getValue());
+        telemetry.addData("Left Difference: ", l.getValue() - analog_l);
+        telemetry.addData("Right Difference: ", r.getValue() - analog_r);
+        telemetry.addData("Center Difference: ", c.getValue() - analog_c);
     }
 
     @Override
@@ -120,20 +137,45 @@ public class Follow extends OpMode {
     }
 
     void turnLeft(int deg) {
-        spin.resetZAxisIntegrator();
         deg = 360 - deg;
-        while(spin.getHeading() != deg) {
-            br.setPower(-motor_power);
-            bl.setPower(-motor_power);
+        if(spin.getHeading() == 0 || spin.getHeading() > deg) {
+            fr.setPower(turn_power);
+            br.setPower(turn_power);
+            fl.setPower(-turn_power);
+            bl.setPower(-turn_power);
         }
     }
 
     void turnRight(int deg) {
-        spin.resetZAxisIntegrator();
-        while(spin.getHeading() != deg) {
-            br.setPower(motor_power);
-            bl.setPower(motor_power);
+        deg += spin.getHeading();
+        if(deg >= 360) {
+            deg -= 360;
         }
+
+        telemetry.addData("degree to turn", deg);
+
+        if(spin.getHeading() < deg) {
+            fr.setPower(-turn_power);
+            fl.setPower(turn_power);
+            br.setPower(turn_power);
+            bl.setPower(-turn_power);
+        }
+    }
+
+    double setTargetAngle(double deg, String direction) {
+        double returner = 0;
+
+        double val = angle - deg;
+
+        if(direction.equals("left")) {
+            if(val < 0) {
+                
+            }
+        } else {
+
+        }
+
+        return returner;
     }
 
     void setPowerAll(double val) {
@@ -141,22 +183,25 @@ public class Follow extends OpMode {
         bl.setPower(val);
     }
 
+    //following method is deprecated...will not be using
     public int state() {
-        if(analogEqualsLine(c, analog_c)) {
-            if(analogEqualsLine(r, analog_r) && !analogEqualsLine(l, analog_l)) {
-                return 3;
-            } else if(analogEqualsLine(l, analog_l) && !analogEqualsLine(r, analog_r)) {
-                return 4;
-            }
+        boolean center = analogEqualsLine(c, analog_c);
+        boolean right = analogEqualsLine(r, analog_r);
+        boolean left = analogEqualsLine(l, analog_l);
+
+        //WARNING: THIS IS BAD CODE
+        if(center && !right && !left) {
             return 0;
+        } else if(center && right && !left) {
+            return 3;
+        } else if(center && !right && left) {
+            return 4;
+        } else if(!center && right && !left) {
+            return 1;
+        } else if(!center && !right && left) {
+            return 2;
         } else {
-            if(analogEqualsLine(r, analog_r) && !analogEqualsLine(l, analog_l)) {
-                return 1;
-            } else if(analogEqualsLine(l, analog_l) && !analogEqualsLine(r, analog_r)) {
-                return 2;
-            } else {
-                return -1;
-            }
+            return -1;
         }
     }
 
