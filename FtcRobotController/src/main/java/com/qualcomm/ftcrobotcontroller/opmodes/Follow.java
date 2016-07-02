@@ -58,7 +58,7 @@ public class Follow extends OpMode {
         //set values, etc.
         encoders = new int[2];
         motor_power = 0.15;
-        turn_power = 0.5;
+        turn_power = 0.25;
 
         //print data
         telemetry.addData("Left Calibration: ", analog_l);
@@ -91,6 +91,7 @@ public class Follow extends OpMode {
 
     @Override
     public void loop() {
+        angle = spin.getHeading(); //update angle
         br.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         bl.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
@@ -100,16 +101,80 @@ public class Follow extends OpMode {
 
         if(center && !right && !left) { //if only center
             forward(); //run straight
+            assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
         } else if(center && right && !left) { //if center and right
-            turnRight(90);
-        } else if(center && !right && left) {
-            turnLeft(90);
-        } else if(!center && right && !left) {
-
-        } else if(!center && !right && left) {
-
-        } else {
+            //save latest position at which "multiple sensors were "true"
+            assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
+            String turn = determineTurnType();
+            if(turn.equals("90deg")) {
+                reverseToPositionDouble();
+                turnRight(90);
+            } else if(turn.equals("angle_down")) {
+                if(center && !right && !left) {
+                    forward();
+                    assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
+                } else {
+                    halt();
+                }
+                double difference_left = bl.getCurrentPosition() - encoders_two[0];
+                double difference_right = br.getCurrentPosition() - encoders_two[1];
+                double difference = (difference_left + difference_right)/2; //get average of encoder values for most accurate distance measurement
+                double distance = distance(difference);
+                double turn_angle = Math.toDegrees(Math.atan(distance/m));
+                turnRight(180 - turn_angle);
+            } else {
+                halt();
+            }
+        } else if(center && !right && left) { //if center and left
+            //save latest position at which "multiple sensors were "true"
+            assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
+            String turn = determineTurnType();
+            if(turn.equals("90deg")) {
+                reverseToPositionDouble();
+                turnLeft(90);
+            } else if(turn.equals("angle_down")) {
+                if(center && !right && !left) {
+                    forward();
+                    assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
+                } else {
+                    halt();
+                }
+                double difference_left = bl.getCurrentPosition() - encoders_two[0];
+                double difference_right = br.getCurrentPosition() - encoders_two[1];
+                double difference = (difference_left + difference_right)/2; //get average of encoder values for most accurate distance measurement
+                double distance = distance(difference);
+                double turn_angle = Math.toDegrees(Math.atan(distance/m));
+                turnLeft(180 - turn_angle);
+            } else {
+                halt();
+            }
+        } else if(!center && right && !left) { //if right only
+            double difference_left = bl.getCurrentPosition() - encoders[0]; //left encoder difference
+            double difference_right = br.getCurrentPosition() - encoders[1]; //right encoder difference
+            double difference = (difference_left + difference_right)/2; //get average of encoder values for most accurate distance measurement
+            reverseToPosition(); //go back to position to turn
+            double distance = distance(difference);
+            double turn_angle = Math.toDegrees(Math.atan(distance/m));
+            turnRight(turn_angle);
             halt();
+        } else if(!center && !right && left) { //if left only
+            double difference_left = bl.getCurrentPosition() - encoders[0]; //left encoder difference
+            double difference_right = br.getCurrentPosition() - encoders[1]; //right encoder difference
+            double difference = (difference_left + difference_right)/2; //get average of encoder values for most accurate distance measurement
+            reverseToPosition(); //go back to position to turn
+            double distance = distance(difference);
+            double turn_angle = Math.toDegrees(Math.atan(distance/m));
+            turnLeft(turn_angle);
+            halt();
+        } else {
+            double time = this.time;
+            if(this.time - time < 5) {
+                if(state() == -1) {
+                    forward();
+                } else {
+                    halt();
+                }
+            }
         }
 
         telemetry.addData("State: ", state());
@@ -132,13 +197,34 @@ public class Follow extends OpMode {
         setPowerAll(motor_power);
     }
 
+    String determineTurnType() {
+        String returner = "";
+        forward();
+        if(state() == -1) {
+            halt();
+            returner = "90deg";
+        } else if(state() == 0) {
+            halt();
+            returner = "angle_down";
+        } else if(state() == 1 || state() == 2) {
+            halt();
+            returner = "angle_up";
+        } else {
+            halt();
+            returner = "stop(ERROR)";
+        }
+        telemetry.addData("Turn Type: ", returner);
+        return returner;
+    }
+
     void halt() {
         setPowerAll(0);
     }
 
-    void turnLeft(int deg) {
-        deg = 360 - deg;
-        if(spin.getHeading() == 0 || spin.getHeading() > deg) {
+    void turnLeft(double deg) {
+        deg = setTargetAngle(deg, "left");
+
+        if(spin.getHeading() != deg) {
             fr.setPower(turn_power);
             br.setPower(turn_power);
             fl.setPower(-turn_power);
@@ -146,15 +232,12 @@ public class Follow extends OpMode {
         }
     }
 
-    void turnRight(int deg) {
-        deg += spin.getHeading();
-        if(deg >= 360) {
-            deg -= 360;
-        }
+    void turnRight(double deg) {
+        deg = setTargetAngle(deg, "right");
 
         telemetry.addData("degree to turn", deg);
 
-        if(spin.getHeading() < deg) {
+        if(spin.getHeading() != deg) {
             fr.setPower(-turn_power);
             fl.setPower(turn_power);
             br.setPower(turn_power);
@@ -162,17 +245,25 @@ public class Follow extends OpMode {
         }
     }
 
+    //confirmed
     double setTargetAngle(double deg, String direction) {
         double returner = 0;
 
-        double val = angle - deg;
 
         if(direction.equals("left")) {
-            if(val < 0) {
-                
+            double difference = angle - deg;
+            if(difference < 0) {
+                returner = 360 + difference;
+            } else {
+                returner = difference;
             }
         } else {
-
+            double sum = angle + deg;
+            if(sum > 359) {
+                returner = sum - 360;
+            } else {
+                returner = sum;
+            }
         }
 
         return returner;
@@ -181,6 +272,8 @@ public class Follow extends OpMode {
     void setPowerAll(double val) {
         br.setPower(val);
         bl.setPower(val);
+        fr.setPower(val);
+        fl.setPower(val);
     }
 
     //following method is deprecated...will not be using
