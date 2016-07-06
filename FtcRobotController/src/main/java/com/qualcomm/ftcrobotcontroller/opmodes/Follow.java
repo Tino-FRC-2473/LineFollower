@@ -28,6 +28,9 @@ public class Follow extends OpMode {
     double m = 0.3; //distance between each line sensor(they are equidistant) --> THIS VALUE IS MEASURED IN INCHES, STILL NEEDS TO BE MEASURED
     double motor_power, turn_power; //powers for turns and going straight
     double angle; //locally stored angle value
+    boolean testing_turn = false;
+    String turn_type = "";
+    String position = "";
 
     @Override
     public void init() {
@@ -43,8 +46,8 @@ public class Follow extends OpMode {
         spin = hardwareMap.gyroSensor.get("spin");
 
         //configure motors for everything to go in the same direction
-        br.setDirection(DcMotor.Direction.REVERSE);
-        fr.setDirection(DcMotor.Direction.REVERSE);
+        bl.setDirection(DcMotor.Direction.REVERSE);
+        fl.setDirection(DcMotor.Direction.REVERSE);
 
         //reset encoders
         br.setMode(DcMotorController.RunMode.RESET_ENCODERS);
@@ -57,7 +60,8 @@ public class Follow extends OpMode {
 
         //set values, etc.
         encoders = new int[2];
-        motor_power = 0.15;
+        encoders_two = new int[2];
+        motor_power = 0.1;
         turn_power = 0.25;
 
         //print data
@@ -100,92 +104,114 @@ public class Follow extends OpMode {
         boolean left = analogEqualsLine(l, analog_l);
 
         if(center && !right && !left) { //if only center
+            position = "center only";
             forward(); //run straight
             assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
         } else if(center && right && !left) { //if center and right
             //save latest position at which "multiple sensors were "true"
+            position = "center and right";
             assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
-            String turn = determineTurnType();
-            if(turn.equals("90deg")) {
-                reverseToPositionDouble();
+            if(testing_turn == false) {
+                testing_turn = true;
+            } else {
                 turnRight(90);
-            } else if(turn.equals("angle_down")) {
-                if(center && !right && !left) {
-                    forward();
-                    assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
-                } else {
-                    halt();
-                }
-                double difference_left = bl.getCurrentPosition() - encoders_two[0];
-                double difference_right = br.getCurrentPosition() - encoders_two[1];
-                double difference = (difference_left + difference_right)/2; //get average of encoder values for most accurate distance measurement
-                double distance = distance(difference);
-                double turn_angle = Math.toDegrees(Math.atan(distance/m));
-                turnRight(180 - turn_angle);
-            } else {
-                halt();
             }
+//            if(turn.equals("90deg")) {
+//                reverseToPositionDouble();
+//                turnRight(90);
+//            } else if(turn.equals("angle_down")) {
+//                if(center && !right && !left) {
+//                    forward();
+//                    assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
+//                } else {
+//                    halt();
+//                }
+//                double difference_left = bl.getCurrentPosition() - encoders_two[0];
+//                double difference_right = br.getCurrentPosition() - encoders_two[1];
+//                double difference = (difference_left + difference_right)/2; //get average of encoder values for most accurate distance measurement
+//                double distance = distance(difference);
+//                double turn_angle = Math.toDegrees(Math.atan(distance/m));
+//                turnRight(180 - turn_angle);
+//            } else {
+//                halt();
+//            }
         } else if(center && !right && left) { //if center and left
+            position = "center and left";
             //save latest position at which "multiple sensors were "true"
-            assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
-            String turn = determineTurnType();
-            if(turn.equals("90deg")) {
+//            assignEncoderValuesDouble(bl.getCurrentPosition(), br.getCurrentPosition());
+//            String turn = determineTurnType();
+//            if(turn.equals("90deg")) {
+//                reverseToPositionDouble();
+//                turnLeft(90);
+//            } else if(turn.equals("angle_down")) {
+//                if(center && !right && !left) {
+//                    forward();
+//                    assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
+//                } else {
+//                    halt();
+//                }
+//                double difference_left = bl.getCurrentPosition() - encoders_two[0];
+//                double difference_right = br.getCurrentPosition() - encoders_two[1];
+//                double difference = (difference_left + difference_right)/2; //get average of encoder values for most accurate distance measurement
+//                double distance = distance(difference);
+//                double turn_angle = Math.toDegrees(Math.atan(distance/m));
+//                turnLeft(180 - turn_angle);
+//            } else {
+//                halt();
+//            }
+        } else if(!center && right && !left) { //if right only
+            position = "right only";
+//            double difference_left = bl.getCurrentPosition() - encoders[0]; //left encoder difference
+//            double difference_right = br.getCurrentPosition() - encoders[1]; //right encoder difference
+//            double difference = (difference_left + difference_right)/2; //get average of encoder values for most accurate distance measurement
+//            reverseToPosition(); //go back to position to turn
+//            double distance = distance(difference);
+//            double turn_angle = Math.toDegrees(Math.atan(distance/m));
+//            turnRight(turn_angle);
+//            halt();
+        } else if(!center && !right && left) { //if left only
+            position = "left only";
+//            double difference_left = bl.getCurrentPosition() - encoders[0]; //left encoder difference
+//            double difference_right = br.getCurrentPosition() - encoders[1]; //right encoder difference
+//            double difference = (difference_left + difference_right)/2; //get average of encoder values for most accurate distance measurement
+//            reverseToPosition(); //go back to position to turn
+//            double distance = distance(difference);
+//            double turn_angle = Math.toDegrees(Math.atan(distance/m));
+//            turnLeft(turn_angle);
+//            halt();
+        } else {
+            if(testing_turn) {
+                telemetry.addData("status: ", "running...");
                 reverseToPositionDouble();
-                turnLeft(90);
-            } else if(turn.equals("angle_down")) {
-                if(center && !right && !left) {
-                    forward();
-                    assignEncoderValues(bl.getCurrentPosition(), br.getCurrentPosition());
-                } else {
-                    halt();
-                }
-                double difference_left = bl.getCurrentPosition() - encoders_two[0];
-                double difference_right = br.getCurrentPosition() - encoders_two[1];
-                double difference = (difference_left + difference_right)/2; //get average of encoder values for most accurate distance measurement
-                double distance = distance(difference);
-                double turn_angle = Math.toDegrees(Math.atan(distance/m));
-                turnLeft(180 - turn_angle);
             } else {
                 halt();
-            }
-        } else if(!center && right && !left) { //if right only
-            double difference_left = bl.getCurrentPosition() - encoders[0]; //left encoder difference
-            double difference_right = br.getCurrentPosition() - encoders[1]; //right encoder difference
-            double difference = (difference_left + difference_right)/2; //get average of encoder values for most accurate distance measurement
-            reverseToPosition(); //go back to position to turn
-            double distance = distance(difference);
-            double turn_angle = Math.toDegrees(Math.atan(distance/m));
-            turnRight(turn_angle);
-            halt();
-        } else if(!center && !right && left) { //if left only
-            double difference_left = bl.getCurrentPosition() - encoders[0]; //left encoder difference
-            double difference_right = br.getCurrentPosition() - encoders[1]; //right encoder difference
-            double difference = (difference_left + difference_right)/2; //get average of encoder values for most accurate distance measurement
-            reverseToPosition(); //go back to position to turn
-            double distance = distance(difference);
-            double turn_angle = Math.toDegrees(Math.atan(distance/m));
-            turnLeft(turn_angle);
-            halt();
-        } else {
-            double time = this.time;
-            if(this.time - time < 5) {
-                if(state() == -1) {
-                    forward();
-                } else {
-                    halt();
-                }
+                position = "weird af messed up stuff";
+                //            double time = this.time;
+                //            if(this.time - time < 5) {
+                //                if(state() == -1) {
+                //                    forward();
+                //                } else {
+                //                    halt();
+                //                }
+                //            }
             }
         }
 
-        telemetry.addData("State: ", state());
-        telemetry.addData("Gyro Heading", spin.getHeading());
-        telemetry.addData("Local Angle Value", angle);
-        telemetry.addData("Left Value: ", l.getValue());
-        telemetry.addData("Right Value: ", r.getValue());
-        telemetry.addData("Center Value: ", c.getValue());
-        telemetry.addData("Left Difference: ", l.getValue() - analog_l);
-        telemetry.addData("Right Difference: ", r.getValue() - analog_r);
-        telemetry.addData("Center Difference: ", c.getValue() - analog_c);
+        telemetry.addData("Turn_Test Switch", testing_turn);
+        telemetry.addData("Turn Type", turn_type);
+        telemetry.addData("Position", position);
+        telemetry.addData("Left encoder", bl.getCurrentPosition());
+        telemetry.addData("Right encoder", br.getCurrentPosition());
+        telemetry.addData("Saved Single L", encoders[0]);
+        telemetry.addData("Saved Single R", encoders[1]);
+        telemetry.addData("Saved Double L", encoders_two[0]);
+        telemetry.addData("Saved Double R", encoders_two[1]);
+//        telemetry.addData("Gyro Heading", spin.getHeading());
+//        telemetry.addData("Local Angle Value", angle);
+
+//        telemetry.addData("Left Difference: ", l.getValue() - analog_l);
+//        telemetry.addData("Right Difference: ", r.getValue() - analog_r);
+//        telemetry.addData("Center Difference: ", c.getValue() - analog_c);
     }
 
     @Override
@@ -198,22 +224,25 @@ public class Follow extends OpMode {
     }
 
     String determineTurnType() {
+        testing_turn = true;
         String returner = "";
-        forward();
-        if(state() == -1) {
-            halt();
-            returner = "90deg";
-        } else if(state() == 0) {
-            halt();
-            returner = "angle_down";
-        } else if(state() == 1 || state() == 2) {
-            halt();
-            returner = "angle_up";
+        if(state() == 3 || state() == 4) {
+            telemetry.addData("State", state());
         } else {
-            halt();
-            returner = "stop(ERROR)";
+            if(state() == -1) {
+                halt();
+                returner = "90deg";
+            } else if(state() == 0) {
+                halt();
+                returner = "angle_down";
+            } else if(state() == 1 || state() == 2) {
+                halt();
+                returner = "angle_up";
+            } else {
+                halt();
+                returner = "stop(ERROR)";
+            }
         }
-        telemetry.addData("Turn Type: ", returner);
         return returner;
     }
 
@@ -242,9 +271,11 @@ public class Follow extends OpMode {
             fl.setPower(turn_power);
             br.setPower(turn_power);
             bl.setPower(-turn_power);
+        } else {
+            testing_turn = false;
         }
     }
-
+b
     //confirmed
     double setTargetAngle(double deg, String direction) {
         double returner = 0;
@@ -267,6 +298,15 @@ public class Follow extends OpMode {
         }
 
         return returner;
+    }
+
+    void forwardForClicks(double clicks) {
+        refreshEncoderValuesDouble();
+        if(br.getCurrentPosition() != clicks && bl.getCurrentPosition() != clicks) {
+            forward();
+        } else {
+            halt();
+        }
     }
 
     void setPowerAll(double val) {
@@ -309,14 +349,25 @@ public class Follow extends OpMode {
     }
 
     void reverseToPosition() {
-        while(br.getCurrentPosition() != 0 && bl.getCurrentPosition() != 0) {
+        if(br.getCurrentPosition() != 0 && bl.getCurrentPosition() != 0) {
             setPowerAll(-motor_power);
         }
     }
 
     void reverseToPositionDouble() {
-        while(br.getCurrentPosition() != encoders_two[1] && bl.getCurrentPosition() != encoders_two[1]) {
+        boolean center = analogEqualsLine(c, analog_c);
+        boolean right = analogEqualsLine(r, analog_r);
+        boolean left = analogEqualsLine(l, analog_l);
+
+        if(!(encoders_two[0] - bl.getCurrentPosition() <= 10 && encoders_two[0] - bl.getCurrentPosition() >= -10) && !(encoders_two[1] - br.getCurrentPosition() <= 10 && encoders_two[1] - br.getCurrentPosition() >= -10)) {
             setPowerAll(-motor_power);
+        } else if(position.equals("center and right")) {
+            telemetry.addData("Yay!", "Works!!!");
+            halt();
+//            testing_turn = false;
+        } else {
+            telemetry.addData("Yay!", "Works!!!");
+            halt();
         }
     }
 
