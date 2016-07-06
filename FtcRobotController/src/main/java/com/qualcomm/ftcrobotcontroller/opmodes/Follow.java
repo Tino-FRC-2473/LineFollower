@@ -175,20 +175,16 @@ public class Follow extends OpMode {
             position = "left only";
             turnLeftToCenter();
         } else {
-            if(testing_turn) {
-                telemetry.addData("status: ", "running...");
-            } else {
-                halt();
-                position = "weird af messed up stuff";
-                forward();
-                //            double time = this.time;
-                //            if(this.time - time < 5) {
-                //                if(state() == -1) {
-                //                    forward();
-                //                } else {
-                //                    halt();
-                //                }
-                //            }
+            halt();
+            position = "weird af messed up stuff";
+            forward();
+            double time = this.time;
+            if(this.time - time < 5) {
+                if(state() == -1) {
+                    forward();
+                } else {
+                    halt();
+                }
             }
         }
 
