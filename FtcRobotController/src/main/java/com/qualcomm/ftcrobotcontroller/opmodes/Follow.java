@@ -15,6 +15,7 @@ public class Follow extends OpMode {
     AnalogInput l, c, r;
     GyroSensor spin;
 
+    //Distance calculation constants
     final static int ENC_COUNTS = 1120;
     final static double G_RATIO = 1;
     final static double CIRCUMFERENCE = Math.PI * 3.75;
