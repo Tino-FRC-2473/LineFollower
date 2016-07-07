@@ -15,6 +15,8 @@ public class Follow extends OpMode {
     boolean left;
     boolean right;
 
+    double currentTime;
+
     /*Data creation: other data*/
     int analog_r, analog_c, analog_l; //line values for each line sensor...setting a threshold
     int[] encoders; //encoder values for positional safekeeping when only center is on the line
@@ -70,7 +72,11 @@ public class Follow extends OpMode {
         }
         else {
             position = "all";
-            forward();
+            currentTime = this.time;
+            if (this.time - currentTime < 5) {
+                forward();
+            }
+//            checkForEnd();
         }
     }
 
@@ -107,6 +113,15 @@ public class Follow extends OpMode {
         fr.setPower(val);
         fl.setPower(val);
     }
+
+//    void checkForEnd() {
+//        if (position.equals("all")) {
+//            stop();
+//        }
+//        else {
+//            forward();
+//        }
+//    }
 
     boolean analogEqualsLine(AnalogInput i, int val) {
         return Math.abs(i.getValue() - val) <= 100;
